@@ -1,0 +1,40 @@
+
+{
+  "endpoints": [
+    {
+      "name": "Healthy API",
+      "url": "https://httpbin.org/status/200",
+      "expected_status": 200,
+      "timeout": 5,
+      "max_response_time": 3
+    },
+    {
+      "name": "DNS failure",
+      "url": "https://nonexistent-monitor-test.invalid",
+      "expected_status": 200,
+      "timeout": 3,
+      "max_response_time": 2
+    },
+    {
+      "name": "Connection refused",
+      "url": "http://127.0.0.1:1",
+      "expected_status": 200,
+      "timeout": 3,
+      "max_response_time": 2
+    },
+    {
+      "name": "Expired certificate",
+      "url": "https://expired.badssl.com/",
+      "expected_status": 200,
+      "timeout": 5,
+      "max_response_time": 3
+    },
+    {
+      "name": "Unexpected HTTP status",
+      "url": "https://httpbin.org/status/404",
+      "expected_status": 200,
+      "timeout": 5,
+      "max_response_time": 3
+    }
+  ]
+}
