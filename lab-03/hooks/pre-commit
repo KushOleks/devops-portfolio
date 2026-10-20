@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running pre-commit checks..."
+
+if ! command -v shellcheck >/dev/null 2>&1; then
+    echo "ERROR: ShellCheck is not installed."
+    exit 1
+fi
+
+if ! command -v ruff >/dev/null 2>&1; then
+    echo "ERROR: Ruff is not installed."
+    exit 1
+fi
+
+FAILED=0
+CHECKED=0
+
+while IFS= read -r -d '' file; do
+    if [[ ! -f "$file" ]]; then
+        continue
+    fi
+
+    case "$file" in
+        *.sh|*/hooks/pre-commit|*/hooks/pre-push)
+            echo "ShellCheck: $file"
+            if ! git show ":$file" | shellcheck -s bash -; then
+                FAILED=1
+            fi
+            CHECKED=$((CHECKED + 1))
+            ;;
+        *.py)
+            echo "Ruff: $file"
+            if ! git show ":$file" | ruff check --stdin-filename "$file" -; then
+                FAILED=1
+            fi
+            CHECKED=$((CHECKED + 1))
+            ;;
+    esac
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+echo "Checked files: $CHECKED"
+
+if [[ "$FAILED" -ne 0 ]]; then
+    echo "ERROR: Lint checks failed. Commit blocked."
+    exit 1
+fi
+
+echo "Pre-commit checks passed."
+exit 0
