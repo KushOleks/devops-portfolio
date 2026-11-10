@@ -1,6 +1,6 @@
-# Лабораторна №4 — завдання №1–2
+# Лабораторна №4 — завдання №1–3
 
-Поточний обсяг: командні форки, локальна взаємодія Vue → FastAPI → PostgreSQL/Redis та конвеєр CI для API (завдання №2). Завдання №3–5, rulesets і бонуси не виконуються.
+Поточний обсяг: командні форки, локальна взаємодія Vue → FastAPI → PostgreSQL/Redis та конвеєри CI для API й UI (завдання №2–3). Завдання №4–5, rulesets і бонуси не виконуються.
 
 ## Команда
 
@@ -106,6 +106,18 @@ docker compose -f compose.local.yml down
 
 Локально Ruff і health-тести пройшли. Негативна перевірка підтвердила Connection refused. Онлайн [API CI успішний](https://github.com/KushOleks/withlist-api/actions/runs/42894806678): Ruff, 3 pytest-сценарії, SELECT 1/PING і перевірка провалу тесту без PostgreSQL.
 
-[Pull Request API №1](https://github.com/KushOleks/withlist-api/pull/1) містить workflow, lockfile, тести та мінімальні зміни для їх запуску. [Пояснення API CI](https://github.com/KushOleks/withlist-api/blob/lab-04/api-ci/docs/checks.md). PR відкритий, merge не виконувався.
+[Pull Request API №1](https://github.com/KushOleks/withlist-api/pull/1) містить workflow, lockfile, тести та мінімальні зміни для їх запуску. [Пояснення API CI](https://github.com/KushOleks/withlist-api/blob/lab-04/api-ci/docs/checks.md). API PR №1 злитий у main; [CI після злиття успішний](https://github.com/KushOleks/withlist-api/actions/runs/42909473907).
 
-Код підготовлено Codex від акаунта KushOleks. Участь Porchuk у review цього етапу ще не підтверджено; запуск на його комп'ютері залишається окремим кроком.
+API PR №1 має схвалення з акаунта Porchuk. Запуск застосунку на його комп'ютері залишається окремим кроком.
+
+## Завдання №3 — UI CI (11 листопада 2026)
+
+Гілка `lab-04/ui-ci` у форку wishlist-ui містить три послідовні перевірки:
+
+1. **UI lint (ESLint)** — npm run lint. Додано конфігурацію Vue/TypeScript, виправлено явні any та невикористані catch-змінні.
+2. **UI types (vue-tsc)** — npm run typecheck.
+3. **UI build (Vite)** — npm run build і завантаження dist як артефакту wishlist-ui-dist на 14 днів.
+
+Workflow запускається на pull_request та push у main. Ubuntu 24.04, Node.js 24.21.0 і версії Actions закріплено; встановлення виконується через npm ci, кеш npm залежить від package-lock.json. Локально чисте npm ci та всі три команди пройшли. Тести UI не додаються відповідно до умови.
+
+[UI PR №1](https://github.com/KushOleks/wishlist-ui/pull/1) і [успішний UI CI](https://github.com/KushOleks/wishlist-ui/actions/runs/42913704389): усі три перевірки пройшли. Артефакт wishlist-ui-dist завантажено та перевірено: index.html, JavaScript і CSS присутні. [Пояснення UI CI](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-ci/docs/checks.md). Захист гілок, демонстрація блокування merge та вимірювання часу кешу залишаються на завдання №4–5.
