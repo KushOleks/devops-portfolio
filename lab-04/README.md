@@ -1,6 +1,6 @@
-# Лабораторна №4 — завдання №1
+# Лабораторна №4 — завдання №1–2
 
-Поточний обсяг: командні форки та локальна взаємодія Vue → FastAPI → PostgreSQL/Redis. Завдання 2–5, CI, rulesets і бонуси не виконуються.
+Поточний обсяг: командні форки, локальна взаємодія Vue → FastAPI → PostgreSQL/Redis та конвеєр CI для API (завдання №2). Завдання №3–5, rulesets і бонуси не виконуються.
 
 ## Команда
 
@@ -92,3 +92,20 @@ docker compose -f compose.local.yml down
 У журналі реєстрації passlib 1.7.4 показує попередження про атрибут версії bcrypt 4.3.0; реєстрація та вхід пройшли з HTTP 200. Залежності в межах цього етапу не оновлювалися.
 
 ![Створений через UI список і побажання після перезавантаження](evidence/ui-api.png)
+
+## Завдання №2 — API CI (10 листопада 2026)
+
+Підготовлено гілку `lab-04/api-ci` у форку API. Вона включає попередню гілку локального запуску.
+
+- `.github/workflows/ci.yml`: pull_request та push у main, Ubuntu 24.04, Python 3.11.9; actions закріплені commit SHA.
+- **API lint (Ruff)** виконується перед **API tests (PostgreSQL + Redis)**.
+- Залежності зафіксовані з транзитивними пакетами та SHA256-хешами; pip кешується через setup-python.
+- PostgreSQL і Redis працюють як тимчасові job services з health checks; перед pytest перевіряються SELECT 1 і PING.
+- Два health-сценарії не звертаються до бази. Інтеграційний тест читає через endpoint список, створений у реальній тестовій PostgreSQL-транзакції. Дані тесту відкочуються.
+- Додаткова негативна перевірка вимагає, щоб цей тест падав без PostgreSQL.
+
+Локально Ruff і health-тести пройшли. Негативна перевірка підтвердила Connection refused. Онлайн [API CI успішний](https://github.com/KushOleks/withlist-api/actions/runs/42894806678): Ruff, 3 pytest-сценарії, SELECT 1/PING і перевірка провалу тесту без PostgreSQL.
+
+[Pull Request API №1](https://github.com/KushOleks/withlist-api/pull/1) містить workflow, lockfile, тести та мінімальні зміни для їх запуску. [Пояснення API CI](https://github.com/KushOleks/withlist-api/blob/lab-04/api-ci/docs/checks.md). PR відкритий, merge не виконувався.
+
+Код підготовлено Codex від акаунта KushOleks. Участь Porchuk у review цього етапу ще не підтверджено; запуск на його комп'ютері залишається окремим кроком.
