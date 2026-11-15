@@ -1,12 +1,12 @@
-# Лабораторна №4 — завдання №1–3
+# Лабораторна №4 — завдання №1–5
 
-Поточний обсяг: командні форки, локальна взаємодія Vue → FastAPI → PostgreSQL/Redis та конвеєри CI для API й UI (завдання №2–3). Завдання №4–5, rulesets і бонуси не виконуються.
+Поточний обсяг: локальний запуск, API/UI CI, обов’язкові перевірки main та вимірювання ефекту кешу (завдання №1–5). Бонуси не виконувалися. Локальний запуск підтверджений на Mac власника; кожному іншому учаснику ще потрібно окремо підтвердити свій запуск.
 
 ## Команда
 
 - Власник: [KushOleks](https://github.com/KushOleks).
 - Другий учасник: [Porchuk](https://github.com/Porchuk). Запрошення прийнято через акаунт Porchuk; рівень Write в обох форках підтверджено GitHub API.
-- Третій студент зможе приєднатися через Settings → Collaborators → Add people в обох форках з рівнем Write.
+- Третій учасник: [ookioy](https://github.com/ookioy). Запрошення до обох форків прийняті 15 листопада 2026; Write-доступ підтверджено.
 
 Репозиторії: [API](https://github.com/KushOleks/withlist-api), [UI](https://github.com/KushOleks/wishlist-ui). Upstream: [API](https://github.com/nromanen/withlist-api), [UI](https://github.com/nromanen/wishlist-ui).
 
@@ -16,11 +16,11 @@ Mac Apple Silicon (arm64), Git, Docker Desktop із запущеним Engine, D
 
 ## Запуск
 
-Налаштування завдання №1 збережено в гілках `lab-04/local-setup` обох форків.
+Налаштування локального запуску й конвеєри злиті в main обох форків. Для запуску використовуйте main.
 
 ```bash
-git clone --branch lab-04/local-setup https://github.com/KushOleks/withlist-api.git
-git clone --branch lab-04/local-setup https://github.com/KushOleks/wishlist-ui.git
+git clone --branch main https://github.com/KushOleks/withlist-api.git
+git clone --branch main https://github.com/KushOleks/wishlist-ui.git
 cd withlist-api
 cp .env.example .env
 openssl rand -hex 32
@@ -120,4 +120,37 @@ API PR №1 має схвалення з акаунта Porchuk. Запуск з
 
 Workflow запускається на pull_request та push у main. Ubuntu 24.04, Node.js 24.21.0 і версії Actions закріплено; встановлення виконується через npm ci, кеш npm залежить від package-lock.json. Локально чисте npm ci та всі три команди пройшли. Тести UI не додаються відповідно до умови.
 
-[UI PR №1](https://github.com/KushOleks/wishlist-ui/pull/1) і [успішний UI CI](https://github.com/KushOleks/wishlist-ui/actions/runs/42913704389): усі три перевірки пройшли. Артефакт wishlist-ui-dist завантажено та перевірено: index.html, JavaScript і CSS присутні. [Пояснення UI CI](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-ci/docs/checks.md). Захист гілок, демонстрація блокування merge та вимірювання часу кешу залишаються на завдання №4–5.
+[UI PR №1](https://github.com/KushOleks/wishlist-ui/pull/1) і [успішний UI CI](https://github.com/KushOleks/wishlist-ui/actions/runs/42913704389): усі три перевірки пройшли. Артефакт wishlist-ui-dist завантажено та перевірено: index.html, JavaScript і CSS присутні. [Пояснення UI CI](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-ci/docs/checks.md). Захист гілок, демонстрація блокування merge та вимірювання кешу описані нижче.
+
+## Уточнення конфігурації PostgreSQL
+
+У [API PR №2](https://github.com/KushOleks/withlist-api/pull/2) прибрано дубль TEST_DATABASE_URL. Застосунок, перевірка готовності та інтеграційний тест використовують одну DATABASE_URL. REDIS_URL залишилася для Redis. Тест перевіряє, що назва PostgreSQL-бази закінчується на _test. PR схвалено з акаунта ookioy після успішного CI та злито в main.
+
+## Завдання №4 — rulesets і демонстрація блокування
+
+- [API ruleset](https://github.com/KushOleks/withlist-api/rules/27323838).
+- [UI ruleset](https://github.com/KushOleks/wishlist-ui/rules/27323839).
+
+В обох форках main вимагає PR, одне схвалення, усі required CI checks і актуальність гілки. Нові коміти скидають застарілі схвалення. Force-push і видалення main заборонено; bypass_actors порожній, включно для адміністратора.
+
+[API PR №3](https://github.com/KushOleks/withlist-api/pull/3) та [UI PR №2](https://github.com/KushOleks/wishlist-ui/pull/2) демонструють червоний CI, конкретну помилку й виправлення в тому самому PR. Рівно по три справжні скриншоти з поясненнями зберігаються в docs/checks.md та docs/assets кожного форка:
+
+- [API: докази](https://github.com/KushOleks/withlist-api/blob/lab-04/api-checks-demo/docs/checks.md).
+- [UI: докази](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-checks-demo/docs/checks.md).
+
+## Завдання №5 — ефект кешу
+
+| Репозиторій | Холодний старт | Наступний прогін | Різниця |
+|---|---:|---:|---:|
+| API | 110 с | 81 с | 29 с (26,4%) |
+| UI | 57 с | 53 с | 4 с (7,0%) |
+
+Джерело — run_duration_ms GitHub Actions API; посилання й найдовші кроки наведені в docs/checks.md форків. Журнали підтверджують cache miss у першому lint та cache hit у наступному прогоні з тим самим lockfile. Подальші job першого прогону вже могли отримати кеш — це холодний старт workflow, а не вимкнений кеш у кожному job.
+
+## Поточна командна історія
+
+- KushOleks: власник форків, commits/PR локального запуску, обох конвеєрів та доказів.
+- Porchuk: схвалення API PR №1; схвалення виправленого API PR №3 із доказами.
+- ookioy: прийнятий доступ до обох форків, схвалення API PR №2; схвалення виправленого UI PR №2 із доказами.
+
+Це опис дій акаунтів у GitHub. Окремий локальний запуск на комп’ютерах Porchuk і ookioy не підтверджено; не слід представляти запуск на Mac власника як три незалежні запуски.
