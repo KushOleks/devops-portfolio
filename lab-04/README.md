@@ -106,7 +106,7 @@ docker compose -f compose.local.yml down
 
 Локально Ruff і health-тести пройшли. Негативна перевірка підтвердила Connection refused. Онлайн [API CI успішний](https://github.com/KushOleks/withlist-api/actions/runs/42894806678): Ruff, 3 pytest-сценарії, SELECT 1/PING і перевірка провалу тесту без PostgreSQL.
 
-[Pull Request API №1](https://github.com/KushOleks/withlist-api/pull/1) містить workflow, lockfile, тести та мінімальні зміни для їх запуску. [Пояснення API CI](https://github.com/KushOleks/withlist-api/blob/lab-04/api-ci/docs/checks.md). API PR №1 злитий у main; [CI після злиття успішний](https://github.com/KushOleks/withlist-api/actions/runs/42909473907).
+[Pull Request API №1](https://github.com/KushOleks/withlist-api/pull/1) містить workflow, lockfile, тести та мінімальні зміни для їх запуску. [Пояснення API CI](https://github.com/KushOleks/withlist-api/blob/main/docs/checks.md). API PR №1 злитий у main; [CI після злиття успішний](https://github.com/KushOleks/withlist-api/actions/runs/42909473907).
 
 API PR №1 має схвалення з акаунта Porchuk. Запуск застосунку на його комп'ютері залишається окремим кроком.
 
@@ -120,7 +120,7 @@ API PR №1 має схвалення з акаунта Porchuk. Запуск з
 
 Workflow запускається на pull_request та push у main. Ubuntu 24.04, Node.js 24.21.0 і версії Actions закріплено; встановлення виконується через npm ci, кеш npm залежить від package-lock.json. Локально чисте npm ci та всі три команди пройшли. Тести UI не додаються відповідно до умови.
 
-[UI PR №1](https://github.com/KushOleks/wishlist-ui/pull/1) і [успішний UI CI](https://github.com/KushOleks/wishlist-ui/actions/runs/42913704389): усі три перевірки пройшли. Артефакт wishlist-ui-dist завантажено та перевірено: index.html, JavaScript і CSS присутні. [Пояснення UI CI](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-ci/docs/checks.md). Захист гілок, демонстрація блокування merge та вимірювання кешу описані нижче.
+[UI PR №1](https://github.com/KushOleks/wishlist-ui/pull/1) і [успішний UI CI](https://github.com/KushOleks/wishlist-ui/actions/runs/42913704389): усі три перевірки пройшли. Артефакт wishlist-ui-dist завантажено та перевірено: index.html, JavaScript і CSS присутні. [Пояснення UI CI](https://github.com/KushOleks/wishlist-ui/blob/main/docs/checks.md). Захист гілок, демонстрація блокування merge та вимірювання кешу описані нижче.
 
 ## Уточнення конфігурації PostgreSQL
 
@@ -135,8 +135,8 @@ Workflow запускається на pull_request та push у main. Ubuntu 24
 
 [API PR №3](https://github.com/KushOleks/withlist-api/pull/3) та [UI PR №2](https://github.com/KushOleks/wishlist-ui/pull/2) демонструють червоний CI, конкретну помилку й виправлення в тому самому PR. Рівно по три справжні скриншоти з поясненнями зберігаються в docs/checks.md та docs/assets кожного форка:
 
-- [API: докази](https://github.com/KushOleks/withlist-api/blob/lab-04/api-checks-demo/docs/checks.md).
-- [UI: докази](https://github.com/KushOleks/wishlist-ui/blob/lab-04/ui-checks-demo/docs/checks.md).
+- [API: докази](https://github.com/KushOleks/withlist-api/blob/main/docs/checks.md).
+- [UI: докази](https://github.com/KushOleks/wishlist-ui/blob/main/docs/checks.md).
 
 ## Завдання №5 — ефект кешу
 
@@ -154,3 +154,12 @@ Workflow запускається на pull_request та push у main. Ubuntu 24
 - ookioy: прийнятий доступ до обох форків, схвалення API PR №2; схвалення виправленого UI PR №2 із доказами.
 
 Це опис дій акаунтів у GitHub. Окремий локальний запуск на комп’ютерах Porchuk і ookioy не підтверджено; не слід представляти запуск на Mac власника як три незалежні запуски.
+
+## Фінальна перевірка основної частини
+
+API PR №3 та UI PR №2 злиті після зеленого CI та повторного review фінальних комітів. Автоматичне скидання попередніх схвалень після нових комітів перевірено фактично: обидва PR отримали REVIEW_REQUIRED, попередні reviews — DISMISSED.
+
+- [Фінальний API CI на main](https://github.com/KushOleks/withlist-api/actions/runs/43746696177).
+- [Фінальний UI CI на main](https://github.com/KushOleks/wishlist-ui/actions/runs/43746700839).
+
+Локальна папка проєктів: `/Users/mac/Documents/DevOps/lab-04`. Усі актуальні зміни доступні в main. Перевірки й дані захисту гілок стосуються обох командних форків; персональне портфоліо містить звіт. Бонуси не виконувалися.
