@@ -197,7 +197,8 @@ reviews, заборона force-push/видалення та відсутніс�
 Результати контрольних запусків:
 - [API, перший запуск](https://github.com/KushOleks/withlist-api/actions/runs/43757037989):
   46 записів про відомі вразливості у 13 пакетах. Перевірявся lock-файл до додавання pytest-cov.
-- [API, остаточний lock-файл](https://github.com/KushOleks/withlist-api/actions/runs/43757356882).
+- [API, остаточний lock-файл](https://github.com/KushOleks/withlist-api/actions/runs/43757356882):
+  перевірено 45 залежностей, 46 записів про вразливості у 13 пакетах.
 - [UI](https://github.com/KushOleks/wishlist-ui/actions/runs/43757235478):
   18 проблем (14 high, 4 moderate), без технічної помилки npm audit.
 
